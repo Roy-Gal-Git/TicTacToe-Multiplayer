@@ -9,7 +9,10 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log(`Client connected on socket: ${socket.id}`);
+  // console.log(`Client connected on socket: ${socket.id}`);
+  socket.on("turn", (payload) => {
+    io.emit("turn", payload);
+  });
 });
 
 server.listen(3001, () => {
