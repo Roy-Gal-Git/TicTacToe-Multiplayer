@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
+import Board from "./components/board";
 
 const socket = io.connect("http://localhost:3001");
 
@@ -18,21 +19,23 @@ function App() {
     null,
   ]);
 
-  const playTurn = (e) => {
+  const handleTurn = (e) => {
     e.preventDefault();
-    if (table[e.currentTarget.id]) {
-      console.log("[ERROR]: a player already used this spot");
+    const index = e.currentTarget.id;
+
+    if (table[index]) {
+      alert("[ERROR]: a player already used this spot");
     } else {
-      socket.emit("turn", { player, index: e.currentTarget.id });
+      const tableCopy = [...table];
+      tableCopy[index] = player;
+      socket.emit("turn", tableCopy);
       player === "X" ? setPlayer("O") : setPlayer("X");
     }
   };
 
   useEffect(() => {
     socket.on("turn", (payload) => {
-      const tableCopy = [...table];
-      tableCopy[payload.index] = payload.player;
-      setTable(tableCopy);
+      setTable(payload);
     });
   });
 
@@ -40,21 +43,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Tic Tac Toe</h1>
-        {table.map((player, index) => {
-          return (
-            <button
-              key={index}
-              id={index}
-              onClick={playTurn}
-              className="btn btn-light m-2"
-            >
-              {player}
-            </button>
-          );
-        })}
-        <button onClick={playTurn} className="btn btn-sm btn-primary">
-          Press Me
-        </button>
+        <Board onTurn={handleTurn} table={table} />
       </header>
     </div>
   );
