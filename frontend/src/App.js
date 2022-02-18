@@ -3,7 +3,17 @@ import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Board from "./components/board";
 
-const socket = io.connect("http://localhost:3001");
+// ! ! ! ! IMPORTANT ! ! ! !
+
+// Change the host here
+
+const HOST = "192.168.1.105";
+
+// Change the host here
+
+// ! ! ! ! IMPORTANT ! ! ! !
+
+const socket = io.connect(`http://${HOST}:3001`);
 
 function App() {
   const [player, setPlayer] = useState("X");
@@ -18,6 +28,8 @@ function App() {
     null,
     null,
   ]);
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState();
 
   const handleTurn = (e) => {
     e.preventDefault();
@@ -28,14 +40,24 @@ function App() {
     } else {
       const tableCopy = [...table];
       tableCopy[index] = player;
-      socket.emit("turn", tableCopy);
-      player === "X" ? setPlayer("O") : setPlayer("X");
+      socket.emit("turn", { table: tableCopy, player });
     }
   };
 
   useEffect(() => {
+    socket.on("newConnection", (payload) => {
+      setTable(payload.table);
+      setPlayer(payload.player);
+      setError(payload.error);
+    });
+
+    socket.on("err", (payload) => {
+      setError(payload.error);
+      setMessage(payload.message);
+    });
+
     socket.on("turn", (payload) => {
-      setTable(payload);
+      setTable(payload.table);
     });
   });
 
@@ -43,7 +65,11 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Tic Tac Toe</h1>
-        <Board onTurn={handleTurn} table={table} />
+        {error ? (
+          <p>{message}</p>
+        ) : (
+          <Board onTurn={handleTurn} table={table} player={player} />
+        )}
       </header>
     </div>
   );
