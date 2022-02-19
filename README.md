@@ -1,8 +1,8 @@
 # TicTacToe-Multiplayer by: Roy Gal
 
-## IMPORTANT
+### IMPORTANT
 
-On frontend/src/app.js - line 10:
+[On frontend/src/app.js - line 10:](frontend/src/app.js)
 
 - Change the HOST constant value to the IP of the machine that's running the node server.
 
