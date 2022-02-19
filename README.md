@@ -26,4 +26,6 @@ npm i
 npm start
 ```
 
+**Connect on http://HOST_IP:3000**
+
 Enjoy the game!
