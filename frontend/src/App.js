@@ -16,6 +16,8 @@ const HOST = "192.168.1.105";
 const socket = io.connect(`http://${HOST}:3001`);
 
 function App() {
+  const [turn, setTurn] = useState("X");
+  const [winner, setWinner] = useState(false);
   const [player, setPlayer] = useState("X");
   const [table, setTable] = useState([
     null,
@@ -49,6 +51,8 @@ function App() {
       setTable(payload.table);
       setPlayer(payload.player);
       setError(payload.error);
+      setWinner(false);
+      setTurn("X");
     });
 
     socket.on("err", (payload) => {
@@ -58,6 +62,11 @@ function App() {
 
     socket.on("turn", (payload) => {
       setTable(payload.table);
+      payload.player === "X" ? setTurn("O") : setTurn("X");
+    });
+
+    socket.on("win", (payload) => {
+      setWinner(payload);
     });
   });
 
@@ -68,7 +77,13 @@ function App() {
         {error ? (
           <p>{message}</p>
         ) : (
-          <Board onTurn={handleTurn} table={table} player={player} />
+          <Board
+            onTurn={handleTurn}
+            table={table}
+            player={player}
+            winner={winner}
+            turn={turn}
+          />
         )}
       </header>
     </div>
