@@ -7,19 +7,19 @@ const Board = ({ table, onTurn, player, winner, turn }) => {
 
   const handleGameEnd = () => {
     if (winner === "X") {
-      return <h2>Player X won!</h2>;
+      return <h2>Player X Won!</h2>;
     } else if (winner === "O") {
-      return <h2>Player O won!</h2>;
+      return <h2>Player O Won!</h2>;
     } else if (winner === "Tie") {
-      return <h2>It's a tie!</h2>;
+      return <h2>It's a Tie!</h2>;
     } else return null;
   };
 
   return (
     <div>
       {handleGameEnd()}
-      <h3>Player {player}</h3>
-      <h6>{turn}'s turn:</h6>
+      <h3>You're Player {player}</h3>
+      {winner ? null : <h6>{turn}'s turn:</h6>}
       <div className="container">
         <div className="col">
           {table.slice(0, 3).map((player, index) => (
