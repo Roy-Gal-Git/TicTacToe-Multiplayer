@@ -18,10 +18,46 @@ const io = require("socket.io")(server, {
   },
 });
 
+// Checks the game table for a win, if there is a winner - return the player
+// If there is no winner - return false
+checkWin = (table) => {
+  const winningCombos = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  for (let i = 0; i < winningCombos.length; i++) {
+    let checkCombo = [];
+
+    winningCombos[i].forEach((index) => {
+      checkCombo.push(table[index]);
+    });
+
+    if (
+      checkCombo.every((player) => player === "X") ||
+      checkCombo.every((player) => player === "O")
+    ) {
+      return checkCombo[0] === "X" ? "X" : "O";
+    }
+  }
+
+  if (!table.includes(null)) return "Tie"
+  
+  return false;
+};
+
+// Handle reseting the board when the game starts
 function handlePlayer(socket, table, player = "") {
   socket.emit("newConnection", { table, player, error: false });
 }
 
+// Connection handler
 io.on("connection", (socket) => {
   console.log("Client connected on:", socket.id);
   connections.push(socket);
@@ -55,9 +91,11 @@ io.on("connection", (socket) => {
     console.log(err.message);
   }
 
-  // echo the last play
+  // Check for a win and echo the last play
   socket.on("turn", (payload) => {
+    const winner = checkWin(payload.table);
     io.emit("turn", payload);
+    if (winner) io.emit("win", winner);
   });
 
   // handle disconnection of a client by removing his socket from the connections array
