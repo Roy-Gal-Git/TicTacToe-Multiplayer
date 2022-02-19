@@ -2,7 +2,7 @@
 
 ### IMPORTANT
 
-[On frontend/src/App.js - line 10:](frontend/src/App.js)
+[On frontend/src/App.js - line 10](/frontend/src/App.js)
 
 - Change the HOST constant value to the IP of the machine that's running the node server.
 
