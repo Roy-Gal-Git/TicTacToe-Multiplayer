@@ -1,6 +1,6 @@
 # TicTacToe-Multiplayer by: Roy Gal
 
-### IMPORTANT
+### IMPORTANT:
 
 [On frontend/src/App.js - line 10](/frontend/src/App.js)
 
