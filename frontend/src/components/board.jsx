@@ -1,10 +1,14 @@
 import React from "react";
 
 const Board = ({ table, onTurn, player, winner, turn }) => {
+  // Handle disabling the buttons when it is not a player's
+  // turn or on a win / tie
   let isDisabled;
   player === turn ? (isDisabled = false) : (isDisabled = true);
   if (winner) isDisabled = true;
 
+  // Return a header with a message when the game ends
+  // if the game did not end, return null
   const handleGameEnd = () => {
     if (winner === "X") {
       return <h2>Player X Won!</h2>;
@@ -28,7 +32,7 @@ const Board = ({ table, onTurn, player, winner, turn }) => {
               onClick={onTurn}
               key={index}
               id={index}
-              style={{ height: "100px", width: "100px" }}
+              style={{ height: "90px", width: "90px" }}
               className="btn btn-danger m-2"
             >
               {player}
@@ -42,7 +46,7 @@ const Board = ({ table, onTurn, player, winner, turn }) => {
               onClick={onTurn}
               key={index + 3}
               id={index + 3}
-              style={{ height: "100px", width: "100px" }}
+              style={{ height: "90px", width: "90px" }}
               className="btn btn-danger m-2"
             >
               {player}
@@ -56,7 +60,7 @@ const Board = ({ table, onTurn, player, winner, turn }) => {
               onClick={onTurn}
               key={index + 6}
               id={index + 6}
-              style={{ height: "100px", width: "100px" }}
+              style={{ height: "90px", width: "90px" }}
               className="btn btn-danger m-2"
             >
               {player}
